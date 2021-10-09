@@ -12,6 +12,14 @@ const Gameboard = (() => {
   };
 })();
 
+const displayController = (() => {
+  const showController = () => console.log('controller');
+
+  return {
+    showController,
+  };
+})();
+
 const factoryPlayers = (name) => {
   const playerName = name;
 
@@ -26,6 +34,8 @@ const factoryPlayers = (name) => {
 
 const player1 = factoryPlayers('Hubert');
 const player2 = factoryPlayers('Eliott');
+
+displayController.showController();
 
 player1.showName();
 player2.showName();
