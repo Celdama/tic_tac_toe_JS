@@ -1,14 +1,23 @@
 const Gameboard = (() => {
+  const gameboardItem = document.querySelectorAll('.grid-item');
+
   const gameboardArray = [
-    '', '', '',
-    '', '', '',
-    '', '', '',
+    'x', 'o', 'x',
+    'x', 'o', 'o',
+    'x', 'x', 'x',
   ];
 
   const showGameboard = () => gameboardArray;
 
+  const renderGameboard = () => {
+    gameboardItem.forEach((item, i) => {
+      item.textContent = gameboardArray[i];
+    });
+  };
+
   return {
     showGameboard,
+    renderGameboard,
   };
 })();
 
@@ -39,3 +48,5 @@ displayController.showController();
 
 player1.showName();
 player2.showName();
+
+Gameboard.renderGameboard();

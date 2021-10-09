@@ -1,0 +1,15 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3px;
+}
+
+.grid div {
+  border: 1px solid blue;
+  display: flex;
+  font-size: 62px;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+}
