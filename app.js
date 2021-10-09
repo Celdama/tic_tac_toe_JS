@@ -31,26 +31,30 @@ const Gameboard = (() => {
   };
 })();
 
-const factoryPlayers = (name, mark) => {
-  // sign is X or O
-  const playerName = name;
-  const playerMark = mark;
-
-  const showName = () => {
-    console.log(playerName);
+const factoryPlayers = (status, mark) => {
+  const showStatus = () => {
+    console.log(status);
   };
 
   return {
-    showName,
-    playerName,
-    playerMark,
+    showStatus,
+    status,
+    mark,
   };
 };
 
 const displayController = (() => {
-  let currentPlayer = 'p1';
+  const player1 = factoryPlayers('player1', 'X');
+  const player2 = factoryPlayers('player2', 'O');
+
+  let currentPlayer = player1.status;
 
   const showController = () => console.log('controller');
+
+  const showCurrentPlayer = () => {
+    console.log(player2.status);
+    console.log(player1);
+  };
 
   const initGame = () => {
     console.log('init Game');
@@ -62,14 +66,12 @@ const displayController = (() => {
   };
 
   const saveMarkInGameBoardArray = (array, i) => {
-    if (currentPlayer === 'p1') {
-      console.log('turn on player1');
-      addMarkToGameboard(array, i, 'X');
-      currentPlayer = 'p2';
+    if (currentPlayer === 'player1') {
+      addMarkToGameboard(array, i, player1.mark);
+      currentPlayer = player2.status;
     } else {
-      console.log('turn on player 2');
-      addMarkToGameboard(array, i, '0');
-      currentPlayer = 'p1';
+      addMarkToGameboard(array, i, player2.mark);
+      currentPlayer = player1.status;
     }
   };
 
@@ -77,15 +79,18 @@ const displayController = (() => {
     showController,
     initGame,
     saveMarkInGameBoardArray,
+    showCurrentPlayer,
   };
 })();
 
+displayController.showCurrentPlayer();
 Gameboard.renderGameboard();
 
 gameboardItem.forEach((item, index) => {
   item.addEventListener('click', () => {
-    displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index);
-    console.log(index);
-    Gameboard.renderGameboard();
+    if (!item.textContent) {
+      displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index);
+      Gameboard.renderGameboard();
+    }
   });
 });
