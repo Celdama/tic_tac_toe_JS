@@ -58,6 +58,8 @@ const displayController = (() => {
 
   const checkIfGameIsOver = (array) => {
     const winningSlot = {};
+    // vérifie si toutes les cases sont remplis
+    const notEmptySlot = array.every((slot) => slot !== '');
 
     if (array[0] === array[1] && array[1] === array[2]) {
       // ce if permet d'éviter le cas où les 3 cases sont === mais valent " "
@@ -124,7 +126,10 @@ const displayController = (() => {
       }
     }
 
-    return winningSlot;
+    return {
+      winningSlot,
+      notEmptySlot,
+    };
   };
 
   const initGame = () => {
@@ -146,12 +151,24 @@ const displayController = (() => {
     }
   };
 
+  const displayWinner = (slot) => {
+    console.log('we have a winner');
+    console.log(slot);
+    console.log(gameboardItem);
+  };
+
+  const displayTieGame = () => {
+    console.log('its a tie game');
+  };
+
   return {
     showController,
     initGame,
     saveMarkInGameBoardArray,
     showCurrentPlayer,
     checkIfGameIsOver,
+    displayWinner,
+    displayTieGame,
   };
 })();
 
@@ -162,12 +179,12 @@ gameboardItem.forEach((item, index) => {
   item.addEventListener('click', () => {
     if (!item.textContent) {
       displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index);
-      // console.log(index);
-      // console.log(displayController.checkIfGameIsOver(Gameboard.gameboardArray));
-      const winning = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
-      if (Object.entries(winning).length !== 0) {
-        console.log('we have a winner !!!! ');
-        console.log(winning);
+      const { winningSlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
+      const tieGame = displayController.checkIfGameIsOver(Gameboard.gameboardArray).notEmptySlot;
+      if (Object.entries(winningSlot).length !== 0) {
+        displayController.displayWinner(winningSlot);
+      } else if (tieGame) {
+        displayController.displayTieGame();
       }
       Gameboard.renderGameboard();
     }
