@@ -6,10 +6,22 @@
 }
 
 .grid div {
-  border: 1px solid blue;
   display: flex;
   font-size: 62px;
   align-items: center;
   justify-content: center;
   height: 120px;
+}
+
+.blue {
+  border: 1px solid blue;
+
+}
+
+.red {
+  border: 1px solid red;
+}
+
+.disabled-click {
+  pointer-events: none;
 }

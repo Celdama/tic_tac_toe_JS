@@ -1,7 +1,9 @@
 const gameboardItem = document.querySelectorAll('.grid-item');
+const displayResultPara = document.querySelector('.display-result');
+const resetGameBtn = document.querySelector('.reset-game-btn');
 
 const Gameboard = (() => {
-  let gameboardArray = [
+  const gameboardArray = [
     '', '', '',
     '', '', '',
     '', '', '',
@@ -17,10 +19,22 @@ const Gameboard = (() => {
   };
 
   const resetGameboard = () => {
-    gameboardArray = [];
+    gameboardArray.splice(0, gameboardArray.length);
     for (let i = 0; i < 9; i++) {
       gameboardArray.push('');
     }
+    renderGameboard();
+
+    gameboardItem.forEach((item) => {
+      if (item.classList.contains('red')) {
+        item.classList.toggle('red');
+        item.classList.toggle('blue');
+      }
+
+      if (item.classList.contains('disabled-click')) {
+        item.classList.toggle('disabled-click');
+      }
+    });
   };
 
   return {
@@ -31,29 +45,50 @@ const Gameboard = (() => {
   };
 })();
 
-const factoryPlayers = (status, mark) => {
-  const showStatus = () => {
-    console.log(status);
-  };
-
-  return {
-    showStatus,
-    status,
-    mark,
-  };
-};
+const factoryPlayers = (status, mark) => ({
+  status,
+  mark,
+});
 
 const displayController = (() => {
   const player1 = factoryPlayers('player1', 'X');
   const player2 = factoryPlayers('player2', 'O');
 
-  let currentPlayer = player1.status;
+  let currentPlayer = null;
 
-  const showController = () => console.log('controller');
+  const definePlayer = (player) => {
+    currentPlayer = player.status;
+  };
 
-  const showCurrentPlayer = () => {
-    console.log(player2.status);
-    console.log(player1);
+  const disableClickable = (items) => {
+    items.forEach((item) => {
+      item.classList.add('disabled-click');
+    });
+  };
+
+  const initGame = () => {
+    definePlayer(player1);
+    gameboardItem.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        if (!item.textContent) {
+          displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index);
+          const { winningSlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
+          const { notEmptySlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
+          if (Object.entries(winningSlot).length !== 0) {
+            displayController.displayWinner(winningSlot, gameboardItem);
+            disableClickable(gameboardItem);
+          } else if (notEmptySlot) {
+            displayController.displayTieGame();
+          }
+        }
+        Gameboard.renderGameboard();
+      });
+    });
+  };
+
+  const resetGame = () => {
+    Gameboard.resetGameboard();
+    initGame();
   };
 
   const checkIfGameIsOver = (array) => {
@@ -132,11 +167,6 @@ const displayController = (() => {
     };
   };
 
-  const initGame = () => {
-    console.log('init Game');
-    Gameboard.renderGameboard();
-  };
-
   const addMarkToGameboard = (array, index, playerMark) => {
     array[index] = playerMark;
   };
@@ -151,42 +181,36 @@ const displayController = (() => {
     }
   };
 
-  const displayWinner = (slot) => {
-    console.log('we have a winner');
-    console.log(slot);
-    console.log(gameboardItem);
+  const displayWinner = (slot, gameboard) => {
+    const keys = Object.keys(slot);
+    const winningPlayer = currentPlayer === 'player2' ? player1 : player2;
+
+    keys.forEach((key) => {
+      // selectionne les éléments du dom corressponant aux slot gagnant
+      const winningSlot = gameboard[slot[key]];
+      winningSlot.classList.toggle('blue');
+      winningSlot.classList.toggle('red');
+    });
+
+    displayResultPara.textContent = `The winner is ${winningPlayer.status}`;
   };
 
   const displayTieGame = () => {
-    console.log('its a tie game');
+    displayResultPara.textContent = 'Tie Game, play again !';
   };
 
   return {
-    showController,
     initGame,
     saveMarkInGameBoardArray,
-    showCurrentPlayer,
     checkIfGameIsOver,
     displayWinner,
     displayTieGame,
+    resetGame,
   };
 })();
 
-displayController.showCurrentPlayer();
-Gameboard.renderGameboard();
+window.onload = displayController.initGame();
 
-gameboardItem.forEach((item, index) => {
-  item.addEventListener('click', () => {
-    if (!item.textContent) {
-      displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index);
-      const { winningSlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
-      const tieGame = displayController.checkIfGameIsOver(Gameboard.gameboardArray).notEmptySlot;
-      if (Object.entries(winningSlot).length !== 0) {
-        displayController.displayWinner(winningSlot);
-      } else if (tieGame) {
-        displayController.displayTieGame();
-      }
-      Gameboard.renderGameboard();
-    }
-  });
+resetGameBtn.addEventListener('click', () => {
+  displayController.resetGame();
 });
