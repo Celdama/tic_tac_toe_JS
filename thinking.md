@@ -1,9 +1,20 @@
-# Store the gameboard inside of a Gameboard Object (MODULE) DONE
+# logic that checks for when the game is over ! should check for 3 in a row and a tie.
 
+0 | 1 | 2
+3 | 4 | 5
+6 | 7 | 8
 
+## je dois verifier si les valeurs pour chaque case ne sont pas égale pour créer une ligne de la meme valeur
 
-# Players also going to be stored in objects (FACTORY)
+0 1 2
+0 3 6
+0 4 8
 
+1 4 7
 
+2 5 8
+2 4 6
 
-# Need another object -- displayController -- to controle the flow of the game (MODULE)
+3 4 5
+
+6 7 8
