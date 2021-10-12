@@ -1,6 +1,10 @@
+const grid = document.querySelector('.grid');
 const gameboardItem = document.querySelectorAll('.grid-item');
 const displayResultPara = document.querySelector('.display-result');
 const resetGameBtn = document.querySelector('.reset-game-btn');
+const startGameBtn = document.querySelector('.start-game-btn');
+const aiBotBtn = document.querySelector('.ai-bot-btn');
+const twoPlayerBtn = document.querySelector('.two-player-btn');
 
 const Gameboard = (() => {
   const gameboardArray = [
@@ -48,14 +52,13 @@ const Gameboard = (() => {
 const factoryPlayers = (status, mark, name, isComputer) => ({
   status,
   mark,
-  name,
+  name: name || status,
   isComputer,
 });
 
 const displayController = (() => {
-  const player1 = factoryPlayers('player1', 'X', 'Jean', false);
-  // const player2 = factoryPlayers('player2', 'O', 'Computer', false);
-  const player2 = factoryPlayers('computer', '0', 'Celdama', true);
+  let player1 = null;
+  let player2 = null;
 
   let haveAWinner = false;
   let currentPlayer = null;
@@ -167,7 +170,37 @@ const displayController = (() => {
   const resetGame = () => {
     Gameboard.resetGameboard();
     haveAWinner = false;
+    displayResultPara.textContent = '';
     definePlayer(player1);
+  };
+
+  const setupGameParticipant = () => {
+    startGameBtn.style.display = 'none';
+    aiBotBtn.style.display = 'block';
+    twoPlayerBtn.style.display = 'block';
+
+    aiBotBtn.addEventListener('click', () => {
+      console.log('its a computer battle');
+      console.log(grid);
+      grid.style.visibility = 'visible';
+      player1 = factoryPlayers('player1', 'X', 'You', false);
+      player2 = factoryPlayers('computer', '0', 'Ai', true);
+      initGame();
+      resetGameBtn.style.display = 'block';
+    });
+
+    twoPlayerBtn.addEventListener('click', () => {
+      console.log('its a human battle');
+      grid.style.visibility = 'visible';
+      const namePlayer1 = prompt('name of player 1 ?');
+      const namePlayer2 = prompt('name of player 2 ?');
+      player1 = factoryPlayers('player1', 'X', namePlayer1, false);
+      player2 = factoryPlayers('player2', 'O', namePlayer2, false);
+      console.log(player1);
+      console.log(player2);
+      initGame();
+      resetGameBtn.style.display = 'block';
+    });
   };
 
   const checkIfGameIsOver = (array) => {
@@ -269,9 +302,9 @@ const displayController = (() => {
     haveAWinner = true;
 
     if (Ai) {
-      winningPlayer = currentPlayer === 'player1' ? player2.status : player1.status;
+      winningPlayer = currentPlayer === 'player1' ? player2.name : player1.name;
     } else {
-      winningPlayer = currentPlayer === 'player2' ? player1.status : player2.status;
+      winningPlayer = currentPlayer === 'player2' ? player1.name : player2.name;
     }
 
     const keys = Object.keys(slot);
@@ -297,10 +330,13 @@ const displayController = (() => {
     displayWinner,
     displayTieGame,
     resetGame,
+    setupGameParticipant,
   };
 })();
 
-window.onload = displayController.initGame();
+startGameBtn.addEventListener('click', () => {
+  displayController.setupGameParticipant();
+});
 
 resetGameBtn.addEventListener('click', () => {
   displayController.resetGame();

@@ -3,6 +3,7 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 3px;
+  visibility: hidden;
 }
 
 .grid div {
@@ -12,6 +13,16 @@
   justify-content: center;
   height: 120px;
 }
+
+.reset-game-btn, .ai-bot-btn, .two-player-btn {
+  display: none;
+}
+
+.start-game-btn {
+  display: block;
+}
+
+
 
 .blue {
   border: 1px solid blue;
