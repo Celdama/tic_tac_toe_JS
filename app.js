@@ -84,23 +84,21 @@ const displayController = (() => {
     return players;
   };
 
+  const randomNumberForComputerChoice = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
   const computerChoice = (array) => {
-    // console.log(array);
     const choiceAvailable = [];
     array.forEach((item, index) => {
       if (!item) {
-        // console.log(`${item}${index} is empty`);
         choiceAvailable.push(index);
       }
     });
-    // console.log(choiceAvailable);
 
     const random = randomNumberForComputerChoice(0, choiceAvailable.length);
     return choiceAvailable[random];
   };
 
   const humanVersusHuman = (item, index) => {
-    // console.log('its a human battle');
     humanVersusAi = false;
 
     if (!item.textContent) {
@@ -117,28 +115,21 @@ const displayController = (() => {
     Gameboard.renderGameboard();
   };
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   const humanVersusComputer = (item, index, computerTurn) => {
-    console.log(computerTurn);
     humanVersusAi = true;
-    // console.log('its a computer battle');
-    console.log(item.textContent);
     if (!item.textContent || item.textContent === 'X') {
       if (computerTurn === false) {
-        console.log('plyaer tuuuuurn');
         displayController.saveMarkInGameBoardArray(Gameboard.gameboardArray, index, humanVersusAi);
       }
 
       if (computerTurn === true) {
-        console.log('compuuuuter turn');
         const computerIndex = computerChoice(Gameboard.gameboardArray);
         displayController
           .saveMarkInGameBoardArray(Gameboard.gameboardArray, computerIndex, humanVersusAi);
       }
       const { winningSlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
       const { notEmptySlot } = displayController.checkIfGameIsOver(Gameboard.gameboardArray);
-      console.log(`current player is${currentPlayer}`);
+
       if (Object.entries(winningSlot).length !== 0) {
         displayController.displayWinner(winningSlot, gameboardItem, humanVersusAi);
         disableClickable(gameboardItem);
@@ -167,7 +158,7 @@ const displayController = (() => {
               humanVersusComputer(item, index, true);
               removeDisableClickable(gameboardItem);
             }
-          }, 2000);
+          }, 1000);
         });
       });
     }
@@ -175,7 +166,8 @@ const displayController = (() => {
 
   const resetGame = () => {
     Gameboard.resetGameboard();
-    initGame();
+    haveAWinner = false;
+    definePlayer(player1);
   };
 
   const checkIfGameIsOver = (array) => {
@@ -258,11 +250,7 @@ const displayController = (() => {
     array[index] = playerMark;
   };
 
-  const randomNumberForComputerChoice = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-
   const saveMarkInGameBoardArray = (array, i, isAiBattle) => {
-    console.log(`current player is savamarkingameboard${currentPlayer}`);
-    console.log(isAiBattle);
     if (currentPlayer === 'player1') {
       addMarkToGameboard(array, i, player1.mark);
       // si c'est contre l'ordi on renvoi la balle à l'ordinateur, sinon au joueur 2
@@ -271,11 +259,9 @@ const displayController = (() => {
       addMarkToGameboard(array, i, player2.mark);
       currentPlayer = player1.status;
     } else if (currentPlayer === 'computer') {
-      // console.log('its a computer choice');
       addMarkToGameboard(array, i, player2.mark);
       currentPlayer = player1.status;
     }
-    console.log(`current player is savamarkingameboard at the enn${currentPlayer}`);
   };
 
   const displayWinner = (slot, gameboard, Ai) => {
@@ -283,7 +269,7 @@ const displayController = (() => {
     haveAWinner = true;
 
     if (Ai) {
-      winningPlayer = currentPlayer === 'player1' ? player1.status : player2.status;
+      winningPlayer = currentPlayer === 'player1' ? player2.status : player1.status;
     } else {
       winningPlayer = currentPlayer === 'player2' ? player1.status : player2.status;
     }
