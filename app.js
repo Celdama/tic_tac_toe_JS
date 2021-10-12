@@ -283,7 +283,7 @@ const displayController = (() => {
     haveAWinner = true;
 
     if (Ai) {
-      winningPlayer = currentPlayer === 'player1' ? player1.status : player2.status;
+      winningPlayer = currentPlayer === 'player1' ? player2.status : player1.status;
     } else {
       winningPlayer = currentPlayer === 'player2' ? player1.status : player2.status;
     }
