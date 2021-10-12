@@ -22,6 +22,10 @@
   display: block;
 }
 
+.reload-game-btn {
+  display: none;
+}
+
 
 
 .blue {

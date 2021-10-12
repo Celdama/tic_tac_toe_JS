@@ -5,6 +5,7 @@ const resetGameBtn = document.querySelector('.reset-game-btn');
 const startGameBtn = document.querySelector('.start-game-btn');
 const aiBotBtn = document.querySelector('.ai-bot-btn');
 const twoPlayerBtn = document.querySelector('.two-player-btn');
+const reloadGameBtn = document.querySelector('.reload-game-btn');
 
 const Gameboard = (() => {
   const gameboardArray = [
@@ -161,7 +162,7 @@ const displayController = (() => {
               humanVersusComputer(item, index, true);
               removeDisableClickable(gameboardItem);
             }
-          }, 1000);
+          }, 500);
         });
       });
     }
@@ -185,6 +186,9 @@ const displayController = (() => {
       player2 = factoryPlayers('computer', '0', 'Ai', true);
       initGame();
       resetGameBtn.style.display = 'block';
+      aiBotBtn.style.display = 'none';
+      twoPlayerBtn.style.display = 'none';
+      reloadGameBtn.style.display = 'block';
     });
 
     twoPlayerBtn.addEventListener('click', () => {
@@ -195,7 +199,14 @@ const displayController = (() => {
       player2 = factoryPlayers('player2', 'O', namePlayer2, false);
       initGame();
       resetGameBtn.style.display = 'block';
+      aiBotBtn.style.display = 'none';
+      twoPlayerBtn.style.display = 'none';
+      reloadGameBtn.style.display = 'block';
     });
+  };
+
+  const reloadGame = () => {
+    window.location.reload();
   };
 
   const checkIfGameIsOver = (array) => {
@@ -326,8 +337,13 @@ const displayController = (() => {
     displayTieGame,
     resetGame,
     setupGameParticipant,
+    reloadGame,
   };
 })();
+
+reloadGameBtn.addEventListener('click', () => {
+  displayController.reloadGame();
+});
 
 startGameBtn.addEventListener('click', () => {
   displayController.setupGameParticipant();
